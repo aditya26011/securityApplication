@@ -1,6 +1,7 @@
 package com.coding.securityApp.securityApplication.service;
 
 import com.coding.securityApp.securityApplication.dto.LoginDTO;
+import com.coding.securityApp.securityApplication.dto.LoginResponseDTO;
 import com.coding.securityApp.securityApplication.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,13 +18,26 @@ public class AuthService {
     @Autowired
     JwtService jwtService;
 
-    public String login(LoginDTO loginDTO) {
+    @Autowired
+    UserService userService;
+
+    public LoginResponseDTO login(LoginDTO loginDTO) {
         Authentication authentication= authenticationManager.authenticate(new
                 UsernamePasswordAuthenticationToken(loginDTO.getEmail(),loginDTO.getPassword())
         );
 
         User user= (User) authentication.getPrincipal();
-        return  jwtService.generateToken(user);// while login we will generate the token
+        String accessToken=  jwtService.generateAccessToken(user);// while login we will generate the token
+        String refreshToken= jwtService.generateRefreshToken(user);
+        return new LoginResponseDTO(user.getId(),accessToken,refreshToken);
+    }
 
+    public LoginResponseDTO refreshToken(String refreshToken) {
+        Long userId=jwtService.getUserIdFromToken(refreshToken);
+
+        User user=userService.getUserById(userId);
+
+        String accessToken = jwtService.generateAccessToken(user);
+        return new LoginResponseDTO(user.getId(),accessToken,refreshToken);
     }
 }

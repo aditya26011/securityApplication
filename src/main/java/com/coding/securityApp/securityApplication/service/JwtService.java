@@ -1,7 +1,6 @@
 package com.coding.securityApp.securityApplication.service;
 
 import com.coding.securityApp.securityApplication.entities.User;
-import com.sun.jdi.LongValue;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -23,7 +22,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(jwtSecretKey.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(User user){
+    public String generateAccessToken(User user){
       return   Jwts.builder()
                 .subject(user.getId().toString())// used to identify the user
                 .claim("email", user.getEmail())//key-value pair
@@ -33,6 +32,16 @@ public class JwtService {
                 .signWith(getSecretKey())
                 .compact();
     }
+
+    public String generateRefreshToken(User user){
+        return   Jwts.builder()
+                .subject(user.getId().toString())// used to identify the user
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis()+1000L *60*60*24*30*6))
+                .signWith(getSecretKey())
+                .compact();
+    }
+
 
     public Long getUserIdFromToken(String token){
         Claims claims= Jwts.parser()
