@@ -2,6 +2,7 @@ package com.coding.securityApp.securityApplication.config;
 
 
 import com.coding.securityApp.securityApplication.filters.JwtAuthFilter;
+import com.coding.securityApp.securityApplication.handlers.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
@@ -34,7 +36,7 @@ public class WebSecurityConfig {
                 //Any request that we make will be authenticated now
                                 .authorizeHttpRequests(auth->
                                 auth
-                                        .requestMatchers("/auth/**","/posts").permitAll()
+                                        .requestMatchers("/auth/**","/posts","/home.html").permitAll()
 //                                        .requestMatchers("/posts/**").hasAnyRole("ADMIN")
                                 .anyRequest().authenticated())
                 .csrf(CsrfConfig->CsrfConfig.disable())
@@ -42,7 +44,11 @@ public class WebSecurityConfig {
                         sessionConfig.
                         sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 //Adding our own jwt filter before username and password filter
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(oauth2Config->oauth2Config
+                        .failureUrl("/login?error=true")
+                        .successHandler(oAuth2SuccessHandler)
+                );
 
 
         ;
