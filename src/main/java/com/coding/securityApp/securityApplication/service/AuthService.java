@@ -21,6 +21,9 @@ public class AuthService {
     @Autowired
     UserService userService;
 
+    @Autowired
+    SessionService sessionService;
+
     public LoginResponseDTO login(LoginDTO loginDTO) {
         Authentication authentication= authenticationManager.authenticate(new
                 UsernamePasswordAuthenticationToken(loginDTO.getEmail(),loginDTO.getPassword())
@@ -29,12 +32,15 @@ public class AuthService {
         User user= (User) authentication.getPrincipal();
         String accessToken=  jwtService.generateAccessToken(user);// while login we will generate the token
         String refreshToken= jwtService.generateRefreshToken(user);
+
+        sessionService.generateNewSession(user,refreshToken);
+
         return new LoginResponseDTO(user.getId(),accessToken,refreshToken);
     }
 
     public LoginResponseDTO refreshToken(String refreshToken) {
         Long userId=jwtService.getUserIdFromToken(refreshToken);
-
+        sessionService.validateSession(refreshToken);
         User user=userService.getUserById(userId);
 
         String accessToken = jwtService.generateAccessToken(user);

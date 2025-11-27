@@ -6,6 +6,7 @@ import com.coding.securityApp.securityApplication.dto.LoginResponseDTO;
 import com.coding.securityApp.securityApplication.dto.SignUpDTO;
 import com.coding.securityApp.securityApplication.dto.UserDTO;
 import com.coding.securityApp.securityApplication.service.AuthService;
+import com.coding.securityApp.securityApplication.service.SessionService;
 import com.coding.securityApp.securityApplication.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
