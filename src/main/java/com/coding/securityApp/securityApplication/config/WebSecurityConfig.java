@@ -45,6 +45,7 @@ public class WebSecurityConfig {
                         sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 //Adding our own jwt filter before username and password filter
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                //adding Oauth2
                 .oauth2Login(oauth2Config->oauth2Config
                         .failureUrl("/login?error=true")
                         .successHandler(oAuth2SuccessHandler)

@@ -33,6 +33,7 @@ public class AuthService {
         String accessToken=  jwtService.generateAccessToken(user);// while login we will generate the token
         String refreshToken= jwtService.generateRefreshToken(user);
 
+        //generating session
         sessionService.generateNewSession(user,refreshToken);
 
         return new LoginResponseDTO(user.getId(),accessToken,refreshToken);

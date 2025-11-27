@@ -23,6 +23,7 @@ import java.io.IOException;
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
+    //Auth2handler
     private final UserService userService;
     private final JwtService jwtService;
 

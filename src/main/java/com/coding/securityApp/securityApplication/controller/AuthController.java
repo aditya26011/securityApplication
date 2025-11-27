@@ -59,6 +59,7 @@ public class AuthController {
         return ResponseEntity.ok(loginResponseDTO);
     }
 
+
     @PostMapping("/refresh")
     public ResponseEntity<LoginResponseDTO> refresh(HttpServletRequest request){
       String refreshToken=  Arrays.stream(request.getCookies())
@@ -68,6 +69,7 @@ public class AuthController {
                 .orElseThrow(()->new AuthenticationServiceException("Refresh token not found in the cookies"));
 
         LoginResponseDTO loginResponseDTO= authService.refreshToken(refreshToken);
+
 
         return ResponseEntity.ok(loginResponseDTO);
     }

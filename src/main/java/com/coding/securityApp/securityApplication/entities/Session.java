@@ -23,6 +23,7 @@ public class Session {
     @CreationTimestamp
     private LocalDateTime lastUsedAt;
 
+
     @ManyToOne  //one user can have many sessions
     private User user;
 

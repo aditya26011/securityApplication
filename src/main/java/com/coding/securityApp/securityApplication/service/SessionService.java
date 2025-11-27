@@ -40,6 +40,7 @@ public class SessionService {
 
     }
 
+
     void validateSession(String refreshToken){
        Session session= sessionRepository.findByRefreshToken(refreshToken).orElseThrow(()->
              new SessionAuthenticationException("Session with refresh token not found:" + refreshToken));
